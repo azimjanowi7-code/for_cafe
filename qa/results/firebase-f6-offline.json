@@ -1,0 +1,22 @@
+{
+  "project": "demo-for-cafe",
+  "kind": "real SDK/callable + IndexedDB mock + serialized durable-record reload",
+  "offlineDrafts": 3,
+  "stableClientOrderIds": [
+    "e50636cf-3034-4fa3-8588-7ac58f26dc99",
+    "971ad45a-c99c-4752-a84d-78a7ec469994",
+    "cf3d832b-9b9c-4024-b346-66c3d48769da"
+  ],
+  "serverOrders": 3,
+  "duplicateOrders": 0,
+  "callableAttempts": 4,
+  "lostAcknowledgmentRecovered": true,
+  "serverPrices": [
+    123,
+    145,
+    145
+  ],
+  "cookRealtimeOldestFirst": true,
+  "paidRevenue": 0,
+  "browserUIReplay": false
+}

@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "demo-for-cafe",
+    "dev": "demo-for-cafe",
+    "staging": "[FIREBASE_STAGING_PROJECT_ID]",
+    "production": "[FIREBASE_PRODUCTION_PROJECT_ID]"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "step": "F6",
+  "date": "2026-11-07",
+  "project": "demo-for-cafe",
+  "productionAccess": false,
+  "deploymentPerformed": false,
+  "checks": {
+    "unit": {
+      "passed": 38,
+      "failed": 0
+    },
+    "emulatorIncludingNestedRulesTests": {
+      "passed": 244,
+      "failed": 0,
+      "f6Specific": 7,
+      "priorRegressionAndRules": 237
+    },
+    "f4PermissionAssertions": 1394,
+    "builds": [
+      "TypeScript frontend",
+      "TypeScript Functions",
+      "Vite default",
+      "Vite emulator"
+    ],
+    "visualReviewRetry": {
+      "available": false,
+      "reason": "Native pipe startup failed and browser access host unavailable",
+      "screens": [
+        "Reports",
+        "My Stats",
+        "Cook today"
+      ],
+      "layoutIssuesConfirmed": []
+    }
+  },
+  "implemented": [
+    "Firestore persistentLocalCache with persistentMultipleTabManager on IndexedDB-capable browsers",
+    "Versioned cafe/UID-scoped durable queue preserving clientOrderId/table/session across reload",
+    "Authenticated submitOrder intent-only transport with acknowledgment checks and server-price reconciliation",
+    "Reconnect/periodic retry with per-instance coalescing, browser Web Locks and server dedupe",
+    "Queued/sending/sent ticket status and connectivity probe/initial-checking state",
+    "Cached existing-session offline restore without persisting password/token in the session metadata",
+    "Realtime accepted open Cook query ordered oldest first and bounded served history, explicit cleanup",
+    "Real serving/Undo and soldOut-only Cook inventory writes",
+    "Atomic persistent offline table opening and authoritative closeTable integration",
+    "QR app shell/service-worker public snapshot/photo caches and KY/RU stale notice"
+  ],
+  "requiredOfflineScenario": {
+    "project": "demo-for-cafe",
+    "kind": "real SDK/callable + IndexedDB mock + serialized durable-record reload",
+    "offlineDrafts": 3,
+    "stableClientOrderIds": [
+      "e25ade4b-bd4e-4e0e-82bf-1612901f8978",
+      "d9aea424-8345-435a-95bf-9d658a963a5e",
+      "f9a9fa5b-7ebe-48dd-9034-91771bba49f7"
+    ],
+    "serverOrders": 3,
+    "duplicateOrders": 0,
+    "callableAttempts": 4,
+    "lostAcknowledgmentRecovered": true,
+    "serverPrices": [
+      123,
+      145,
+      145
+    ],
+    "cookRealtimeOldestFirst": true,
+    "paidRevenue": 0,
+    "browserUIReplay": false
+  },
+  "verificationLimits": [
+    "SDK persistence uses official Node mock-persistence mode and fake-indexeddb, not a rendered browser",
+    "Full browser offline/reload and multi-tab/SW procedures are documented, not falsely marked executed",
+    "Visual/layout review remains unavailable"
+  ],
+  "assumptions": [
+    "Exactly once means one committed server order per stable ID; uncertain HTTP responses can require retries",
+    "First successful submission uses current server prices; retries preserve accepted snapshots",
+    "Offline drafts require a cached/bound own session; conflicting openings remain queued for review",
+    "Cook serving requires confirmed connectivity instead of pretending an offline write was served",
+    "Non-IndexedDB environments use memory cache and cannot guarantee offline document/session persistence across reload",
+    "Other accounts never automatically migrate/send legacy or another UID queue"
+  ],
+  "openQuestions": [],
+  "remaining": [
+    "F7 App Check Enterprise/v3 and production configuration/deployment only after approval",
+    "Real-browser visual/SW/multi-tab manual verification when a host is available",
+    "Prototype administration surfaces outside this step are explicitly documented in OFFLINE_REALTIME.md"
+  ],
+  "nextStep": "STOP; wait for explicit F6 approval before F7"
+}

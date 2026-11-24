@@ -1,0 +1,15 @@
+import type {Timestamp} from 'firebase/firestore';
+export type Localized={ky:string;ru:string};
+export type StaffRole='admin'|'waiter'|'cook';
+export type Cafe={name:Localized;code:string;settings:{warnAfterMinutes:number;lateAfterMinutes:number;currency:'KGS';timeZone:'Asia/Bishkek'};createdAt:Timestamp};
+export type Staff={name:string;role:StaffRole;active:boolean;createdAt:Timestamp};
+export type MenuCategory={name:Localized;order:number};
+export type MenuItem={name:Localized;description:Localized;price:number;categoryId:string;order:number;visible:boolean;soldOut:boolean;photo?:string|null;createdAt:Timestamp;updatedAt:Timestamp};
+export type PriceChange={oldPrice:number;newPrice:number;changedAt:Timestamp;changedBy:string};
+export type CafeTable={number:number;status:'free'|'open';activeSessionId:string|null};
+export type SnapshotItem={itemId:string;nameKy:string;nameRu:string;price:number;qty:number;served:boolean};
+export type Order={tableId:string;sessionId:string;waiterId:string;waiterName:string;status:'new'|'served'|'cancelled';createdAt:Timestamp;clientCreatedAt:Timestamp;items:SnapshotItem[];clientOrderId:string;note:string;servedItems?:boolean[];servedAt?:Timestamp|null;cancelledAt?:Timestamp;cancelledBy?:string;validation?:{state:'pending'|'accepted'|'rejected';reason?:string|null}};
+export type TableSession={tableId:string;openedAt:Timestamp;closedAt:Timestamp|null;paymentType:'cash'|'card'|null;total:number|null;status:'open'|'closed';openedBy:string;closedBy?:string;tableNumber?:number|string;dateKey?:string};
+export type DailyStats={dateKey:string;schemaVersion?:2;salesVersion?:string;waiterCount?:number;timeZone:'Asia/Bishkek';currency:'KGS';ordersPlaced?:number;dishesOrdered?:number;revenue:number;tablesServed:number;ordersServed:number;waitTotalMs:number;cashTotal:number;cardTotal:number;tableTotals:Record<string,number>;tableNames?:Record<string,string>;dishTotals:Record<string,{name:Localized;qty:number}>;updatedAt:Timestamp};
+export type WaiterDailyStats={waiterId:string;salesVersion?:string;waiterName:string;dateKey:string;soldDishesTotal:number;dishesSold:number;tablesServed:number;tables?:Record<string,{tableId:string;tableNumber:string;amount:number;closedAt:number}>;updatedAt:Timestamp};
+export type PublicItem=Pick<MenuItem,'name'|'description'|'price'|'categoryId'|'order'|'photo'>&{categoryOrder:number};

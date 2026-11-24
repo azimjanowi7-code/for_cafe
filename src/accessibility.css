@@ -1,0 +1,30 @@
+:focus-visible{outline:var(--focus-width) solid var(--color-primary);outline-offset:var(--focus-offset)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:var(--focus-width) solid var(--color-primary);outline-offset:var(--focus-offset)}
+button,summary{min-height:var(--target-md);min-width:var(--target-md)}
+a.brand{min-height:var(--target-md)}
+.cook-app button,.waiter-app button{min-height:var(--target-lg);min-width:var(--target-lg)}
+.prototype-bar button,.prototype-nav button,.prototype-login{min-width:var(--target-md);min-height:var(--target-md)}
+.cook-app .prototype-bar button,.waiter-app .prototype-bar button{min-width:var(--target-lg);min-height:var(--target-lg)}
+.button.primary,.chip.selected,.brand-symbol{color:var(--on-primary)}.button.danger{color:var(--on-danger)}
+.button.secondary,.chip:not(.selected),input,select,textarea,.search-field,.input-wrap,.select-wrap,.table-tile,.stepper{border-color:var(--control-border)}
+.icon-button:not(:disabled){color:var(--ink)}
+.language-switch .selected{box-shadow:inset 0 0 0 var(--focus-width) var(--color-primary)}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:1}
+.admin-menu-list .demo-row>label{display:flex;align-items:center;gap:var(--space-2);min-height:var(--target-md)}
+.field>label{font-size:var(--text-sm);font-weight:500}
+.timer-state-label{white-space:normal}.ticket-timer{flex-wrap:wrap}.timer-chip{white-space:normal;flex-wrap:wrap}
+.skip-link{position:fixed;top:var(--space-4);left:var(--space-4);z-index:1000;background:var(--panel);color:var(--ink);padding:var(--space-4);border-radius:var(--radius-sm);transform:translateY(calc(-100% - var(--space-8)))}
+.skip-link:focus{transform:translateY(0)}
+.ticket-clip{overflow:visible}.ticket-exiting .ticket-clip{overflow:hidden}
+.ticket-items li{min-width:0}.ticket-items li>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
+.prototype-login{display:flex!important}.prototype-login span{display:inline!important}.prototype-bar .prototype-nav{flex-wrap:wrap;justify-content:flex-start}
+.field-error{align-items:flex-start}.menu-card>img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.app button,.app input,.app textarea,.app select{line-height:var(--body-leading)}
+.bottom-nav{height:auto;min-height:calc(var(--nav-height) + env(safe-area-inset-bottom))}.bottom-nav button{padding:var(--space-2);height:auto;min-height:var(--target-lg)}
+.order-send-bar{flex-wrap:wrap}.order-send-bar .button{flex:1 1 auto}.order-send-bar strong{overflow-wrap:anywhere}
+@media(max-width:767px){.topbar-actions,.cook-app .topbar-actions{flex-wrap:wrap}.cook-app .topbar-actions .language-switch{margin-left:0}.availability-row{flex-wrap:wrap}.availability-row .button{max-width:100%}.board-heading h1{overflow-wrap:anywhere}}
+.button.secondary:hover,.button.secondary.state-hover,.badge.warning{color:var(--ink)}
+.serve-button:hover{color:var(--on-primary)!important}
+.ticket-items .line-served,.ticket-served{opacity:1}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--control-border)}
+.waiter-app .stepper .icon-button,.waiter-app .icon-button,.cook-app .icon-button{min-width:var(--target-lg);min-height:var(--target-lg)}

@@ -1,0 +1,178 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() { return request.auth != null; }
+    function cafeId() { return request.auth.token.cafeId; }
+    function role() { return request.auth.token.role; }
+    function sameCafe(cafe) {
+      return isSignedIn() && request.auth.token.keys().hasAll(['cafeId', 'role'])
+        && cafeId() == cafe && role() in ['admin', 'waiter', 'cook'];
+    }
+    function isStaff(cafe) {
+      return sameCafe(cafe)
+        && get(/databases/$(database)/documents/cafes/$(cafe)/staff/$(request.auth.uid)).data.active == true
+        && get(/databases/$(database)/documents/cafes/$(cafe)/staff/$(request.auth.uid)).data.role == role();
+    }
+    function isAdmin(cafe) { return isStaff(cafe) && role() == 'admin'; }
+    function isWaiter(cafe) { return isStaff(cafe) && role() == 'waiter'; }
+    function isCook(cafe) { return isStaff(cafe) && role() == 'cook'; }
+    function identifier(value) { return value is string && value.matches('[A-Za-z0-9_-]{1,128}'); }
+    function localized(value, max, empty) {
+      return value is map && value.keys().hasAll(['ky', 'ru']) && value.keys().hasOnly(['ky', 'ru'])
+        && value.ky is string && value.ru is string
+        && value.ky.size() <= max && value.ru.size() <= max
+        && (empty || (value.ky.size() > 0 && value.ru.size() > 0));
+    }
+    function validCategory(data) {
+      return data.keys().hasAll(['name', 'order']) && data.keys().hasOnly(['name', 'order'])
+        && localized(data.name, 200, false) && data.order is int && data.order >= 0 && data.order <= 9999;
+    }
+    function validMenuItem(data, cafe) {
+      return data.keys().hasAll(['name', 'description', 'price', 'categoryId', 'order', 'visible', 'soldOut', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['name', 'description', 'price', 'categoryId', 'order', 'visible', 'soldOut', 'photo', 'createdAt', 'updatedAt'])
+        && localized(data.name, 200, false) && localized(data.description, 2000, true)
+        && data.price is number && data.price >= 0 && data.price <= 1000000
+        && math.abs(data.price * 100 - math.round(data.price * 100)) <= 0.00001
+        && identifier(data.categoryId)
+        && exists(/databases/$(database)/documents/cafes/$(cafe)/menuCategories/$(data.categoryId))
+        && data.order is int && data.order >= 0 && data.order <= 9999
+        && data.visible is bool && data.soldOut is bool
+        && data.createdAt is timestamp && data.updatedAt is timestamp
+        && (!('photo' in data) || data.photo == null || (data.photo is string && data.photo.size() <= 2048 && data.photo.matches('https://.*')));
+    }
+    function ownsSession(cafe, session) {
+      return identifier(session)
+        && get(/databases/$(database)/documents/cafes/$(cafe)/tableSessions/$(session)).data.openedBy == request.auth.uid;
+    }
+    function mayReadOrder(cafe) {
+      return isStaff(cafe) && (role() in ['admin', 'cook']
+        || resource.data.waiterId == request.auth.uid || ownsSession(cafe, resource.data.sessionId));
+    }
+    function validServing() {
+      let next = request.resource.data;
+      return resource.data.validation.state == 'accepted'
+        && resource.data.status in ['new', 'served']
+        && next.diff(resource.data).affectedKeys().hasOnly(['status', 'servedAt', 'servedItems'])
+        && next.servedItems is list && next.servedItems.size() == resource.data.items.size()
+        && next.servedItems.size() > 0 && next.servedItems.hasOnly([true, false])
+        && ((next.status == 'served' && next.servedItems.hasOnly([true]) && next.servedAt == request.time)
+          || (next.status == 'new' && next.servedItems.hasAny([false]) && next.servedAt == null));
+    }
+    function validCancellation(cafe) {
+      return resource.data.status in ['new', 'served']
+        && get(/databases/$(database)/documents/cafes/$(cafe)/tableSessions/$(resource.data.sessionId)).data.status == 'open'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'cancelledAt', 'cancelledBy'])
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.cancelledAt == request.time && request.resource.data.cancelledBy == request.auth.uid;
+    }
+    function today(day) {
+      let local = request.time + duration.value(6, 'h');
+      let parts = day.split('-');
+      return day.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && int(parts[0]) == local.year() && int(parts[1]) == local.month() && int(parts[2]) == local.day();
+    }
+    function validFreeTable(data) {
+      return data.keys().hasAll(['number', 'status', 'activeSessionId'])
+        && data.keys().hasOnly(['number', 'status', 'activeSessionId'])
+        && data.number is int && data.number >= 1 && data.number <= 999
+        && data.status == 'free' && data.activeSessionId == null;
+    }
+    function validOpening(cafe, tableId) {
+      let next = request.resource.data;
+      let session = /databases/$(database)/documents/cafes/$(cafe)/tableSessions/$(next.activeSessionId);
+      return (isWaiter(cafe) || isAdmin(cafe)) && resource.data.status == 'free'
+        && resource.data.activeSessionId == null && next.status == 'open' && identifier(next.activeSessionId)
+        && next.diff(resource.data).affectedKeys().hasOnly(['status', 'activeSessionId'])
+        && !exists(session) && getAfter(session).data.status == 'open'
+        && getAfter(session).data.tableId == tableId && getAfter(session).data.openedBy == request.auth.uid;
+    }
+    function validNewSession(cafe, sessionId) {
+      let next = request.resource.data;
+      let table = /databases/$(database)/documents/cafes/$(cafe)/tables/$(next.tableId);
+      return next.keys().hasAll(['tableId', 'openedBy', 'openedAt', 'closedAt', 'status', 'paymentType', 'total'])
+        && next.keys().hasOnly(['tableId', 'openedBy', 'openedAt', 'closedAt', 'status', 'paymentType', 'total'])
+        && identifier(next.tableId) && identifier(sessionId) && next.openedBy == request.auth.uid
+        && next.openedAt == request.time && next.status == 'open'
+        && next.closedAt == null && next.paymentType == null && next.total == null
+        && get(table).data.status == 'free' && get(table).data.activeSessionId == null
+        && getAfter(table).data.status == 'open' && getAfter(table).data.activeSessionId == sessionId;
+    }
+    function validCafeUpdate() {
+      let next = request.resource.data;
+      let settings = next.settings;
+      return next.diff(resource.data).affectedKeys().hasOnly(['name', 'settings'])
+        && localized(next.name, 200, false)
+        && settings.keys().hasAll(['warnAfterMinutes', 'lateAfterMinutes', 'currency', 'timeZone'])
+        && settings.keys().hasOnly(['warnAfterMinutes', 'lateAfterMinutes', 'currency', 'timeZone'])
+        && settings.warnAfterMinutes is int && settings.lateAfterMinutes is int
+        && settings.warnAfterMinutes >= 1 && settings.warnAfterMinutes < settings.lateAfterMinutes
+        && settings.lateAfterMinutes <= 240 && settings.currency == 'KGS' && settings.timeZone == 'Asia/Bishkek';
+    }
+
+    // F2-approved gateway is the only code lookup. Direct gets would bypass its rate limit.
+    match /cafeCodes/{code} { allow read, write: if false; }
+    match /publicMenu/{cafe} {
+      allow get: if true;
+      allow list, write: if false;
+      match /items/{item} { allow read: if true; allow write: if false; }
+    }
+    match /cafes/{cafe} {
+      allow get: if isStaff(cafe);
+      allow list, create, delete: if false;
+      allow update: if isAdmin(cafe) && validCafeUpdate();
+      match /staff/{uid} {
+        // Own-profile get also supports a localized inactive-account message.
+        allow get: if sameCafe(cafe) && request.auth.uid == uid;
+        allow list, write: if false; // All administration, including listing, uses server APIs.
+      }
+      match /menuCategories/{category} {
+        allow read: if isStaff(cafe);
+        allow create, update: if isAdmin(cafe) && identifier(category) && validCategory(request.resource.data);
+        allow delete: if isAdmin(cafe);
+      }
+      match /menuItems/{item} {
+        allow read: if isStaff(cafe);
+        allow create: if isAdmin(cafe) && identifier(item) && validMenuItem(request.resource.data, cafe)
+          && request.resource.data.createdAt == request.time && request.resource.data.updatedAt == request.time;
+        allow update: if (isAdmin(cafe) && validMenuItem(request.resource.data, cafe)
+            && request.resource.data.createdAt == resource.data.createdAt && request.resource.data.updatedAt == request.time)
+          || (isCook(cafe) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['soldOut'])
+            && request.resource.data.soldOut is bool);
+        allow delete: if isAdmin(cafe);
+        match /priceHistory/{change} { allow read: if isAdmin(cafe); allow write: if false; }
+      }
+      match /tables/{tableId} {
+        allow read: if isStaff(cafe);
+        allow create: if isAdmin(cafe) && identifier(tableId) && validFreeTable(request.resource.data);
+        allow update: if (isAdmin(cafe) && resource.data.status == 'free' && validFreeTable(request.resource.data)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['number']))
+          || (identifier(request.resource.data.activeSessionId) && validOpening(cafe, tableId));
+        allow delete: if isAdmin(cafe) && resource.data.status == 'free';
+      }
+      match /tableSessions/{sessionId} {
+        allow read: if isAdmin(cafe) || (isWaiter(cafe) && resource.data.openedBy == request.auth.uid);
+        allow create: if (isWaiter(cafe) || isAdmin(cafe)) && validNewSession(cafe, sessionId);
+        allow update, delete: if false; // closeTable is authoritative.
+      }
+      match /orders/{order} {
+        allow read: if mayReadOrder(cafe);
+        allow create, delete: if false; // submitOrder only; no role may erase ticket history.
+        allow update: if ((isCook(cafe) || isAdmin(cafe)) && validServing())
+          || (isAdmin(cafe) && validCancellation(cafe));
+      }
+      match /dailyStats/{day} {
+        allow get: if isAdmin(cafe) || (isCook(cafe) && today(day));
+        allow list: if isAdmin(cafe);
+        allow write: if false;
+        match /waiters/{uid} {
+          allow get: if isAdmin(cafe) || (isWaiter(cafe) && request.auth.uid == uid);
+          allow list: if isAdmin(cafe);
+          allow write: if false;
+        }
+      }
+      // audit, operations, locks, receipts, processing markers, loginNames and bootstrap:
+      // server-only. No recursive staff/admin wildcard may broaden this boundary.
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

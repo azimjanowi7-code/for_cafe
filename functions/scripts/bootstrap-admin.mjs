@@ -1,0 +1,11 @@
+import {initializeApp} from 'firebase-admin/app';
+import {assertEmulatorSeedEnvironment} from './seed-guard.mjs';
+import {provisionStaff} from '../lib/provisioning.js';
+assertEmulatorSeedEnvironment(process.env);
+if(process.env.FIREBASE_AUTH_EMULATOR_HOST!=='127.0.0.1:9099')throw Error('Bootstrap requires the loopback Auth emulator');
+const [cafeId,name]=process.argv.slice(2),password=process.env.F2_BOOTSTRAP_PASSWORD;
+if(!cafeId||!name||!password)throw Error('Usage: F2_BOOTSTRAP_PASSWORD=<local value> node scripts/bootstrap-admin.mjs <cafeId> <name>; password is never printed');
+initializeApp({projectId:'demo-for-cafe'});
+const result=await provisionStaff(cafeId,name,'admin',password,{bootstrap:true});
+console.log(`Admin bootstrap complete for ${result.cafeId}; UID ${result.uid}. Repeating bootstrap is refused.`);
+process.exit(0);

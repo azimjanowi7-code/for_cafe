@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build:demo"
+  publish = "dist"
+[build.environment]
+  NODE_VERSION = "22"
+# Keep the historical Firebase source directory out of Netlify Functions discovery.
+[functions]
+  directory = "netlify/static-functions"

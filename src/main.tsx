@@ -1,0 +1,11 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import {lazy,Suspense} from 'react';
+import {isPublicMenuPath} from './publicMenuUrl';
+const Screen=isPublicMenuPath(location.pathname)?lazy(()=>import('./QRMenu')):lazy(()=>import('./demo/DemoApp'));
+import './theme.css';
+import './styles.css';
+import './motion.css';
+import './responsive.css';
+import './accessibility.css';
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><Suspense fallback={<div className="page-loading" role="status" aria-label="Жүктөлүүдө / Загрузка…"><div className="skeleton" aria-hidden="true"><span/><span/><span/></div></div>}><Screen/></Suspense></React.StrictMode>);

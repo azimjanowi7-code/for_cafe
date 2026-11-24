@@ -1,0 +1,14 @@
+{
+  "status": "planning-only; no billing queried or configured",
+  "currency": "USD",
+  "referenceDate": "2026-11-07",
+  "region": "asia-south2",
+  "expectedMonthlyRangeOneSmallCafe": [5, 25],
+  "productionAlertBudget": 40,
+  "stagingAlertBudget": 10,
+  "thresholdsPercent": [50, 80, 100],
+  "billingCap": false,
+  "appCheckAllowanceWarning": "Enterprise/assessment allowances may be shared across the organization; verify current provider pricing",
+  "dailyReview": ["Firestore reads/writes/deletes and query amplification", "Functions invocation/CPU/error/retry rate and maxInstances", "Hosting transfer/storage", "App Check assessment quota/429s", "Backup/PITR retention/storage", "Billing forecast and notification delivery"],
+  "projectOrBillingAccountConfigured": false
+}

@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-06",
+  "engine": "axe-core 4.14.0",
+  "browser": "Safari",
+  "viewportWidth": 390,
+  "rulesets": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"],
+  "runs": [
+    {"route": "/qr", "theme": "light", "passedRules": 36, "violations": 0, "incomplete": 0},
+    {"route": "/cook", "theme": "dark", "passedRules": 36, "violations": 0, "incomplete": 0},
+    {"route": "/cook?theme=light", "theme": "light", "passedRules": 36, "violations": 0, "incomplete": 0}
+  ],
+  "keyboardWalkthrough": "Passed in the local demo: cafe code, staff login, table selection, add dish, save queued ticket, navigate to Cook preview, serve using Enter. Safari Option+Tab reached buttons; no pointer actions in the walkthrough.",
+  "browserZoom": "QR menu inspected after five Safari zoom-in steps from default, then restored with Command+0; menu reflowed to one column and stayed readable.",
+  "lighthouseScore": null,
+  "notes": "Recorded from observed audit summaries, not a raw axe export. Axe reports violations and passes, not a 0–100 score. No Lighthouse score or physical-phone LCP is claimed. Some final nonstructural polish (icon/title/font-subset changes) followed the observed runs."
+}

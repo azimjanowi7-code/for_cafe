@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-07",
+  "step": "F1",
+  "cloudResourcesCreated": false,
+  "project": "demo-for-cafe",
+  "region": "asia-south2",
+  "runtime": "Node 22.23.4",
+  "services": ["auth", "firestore", "functions", "hosting"],
+  "unitTests": {"passed": 20, "failed": 0},
+  "emulatorIntegrationTests": {"passed": 5, "failed": 0, "finalDurationMs": 3602.65275},
+  "checks": [
+    "Frontend TypeScript/Vite production build passed",
+    "Functions TypeScript build passed with firebase-functions 7.4.0",
+    "All four emulators started using loopback endpoints",
+    "emulators:start automatically created guarded DEMO-001 seed",
+    "Actual QR readPublicMenu implementation read six sanitized Firestore dishes",
+    "Cafe-code lookup returned cafeId only",
+    "Anonymous public writes and private reads were explicitly denied",
+    "Private fixture order retained 1050 KGS price snapshots and session reference",
+    "Safari displayed Demo cafe and six seeded dishes at http://127.0.0.1:5080/qr"
+  ],
+  "openInputs": ["staging project ID", "production project ID", "existing Firestore locations", "cloud region confirmation"],
+  "nextStep": "F2 requires explicit user approval"
+}

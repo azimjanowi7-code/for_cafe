@@ -1,0 +1,61 @@
+{
+  "stage": "F7",
+  "status": "prepared; awaiting owner project/Blaze confirmation and cloud runtime activation",
+  "sourceHash": "27a74846aa9e53ade8f8f1b27c0bfe6b13bf5dc4743e8a21a0217ccf0e2252e8",
+  "cloudAccess": false,
+  "deployed": false,
+  "checks": {
+    "unitTests": 47,
+    "emulatorTests": 244,
+    "frontendBuild": "passed",
+    "functionsBuild": "passed via emulator regression",
+    "stagingFixture": "passed; non-deployable",
+    "productionFixture": "passed; non-deployable",
+    "sampleQrCodes": 12,
+    "cloudBrowserAcceptance": "not run"
+  },
+  "costPlanning": {
+    "assumptions": {
+      "days": 30,
+      "ordersPerDay": 100,
+      "paidSessionsPerDay": 50,
+      "staffTabs": 6,
+      "activeHours": 10,
+      "probeSeconds": 5,
+      "qrVisitsPerDay": 250,
+      "visibleMenuItems": 50,
+      "qrMiBPerVisit": 2,
+      "readsPerRebuild": 200,
+      "readUsdPer100k": 0.03,
+      "writeUsdPer100k": 0.09
+    },
+    "rebuildsPerDay": 600,
+    "healthInvocationsPerMonth": 1296000,
+    "readsPerDay": 180950,
+    "writesPerDay": 5350,
+    "monthlyFirestoreOperationsIllustrationUSD": 1.18,
+    "monthlyHostingTransferIllustrationUSD": 0.74,
+    "expectedPlanningRangeUSD": [
+      5,
+      25
+    ],
+    "suggestedProductionAlertBudgetUSD": 40,
+    "suggestedStagingAlertBudgetUSD": 10,
+    "notIncluded": [
+      "taxes/exchange rate/domain registration",
+      "existing shared-quota use",
+      "actual Delhi SKU confirmation",
+      "large image payloads",
+      "extended test/recompute traffic",
+      "SMS or paid third-party services",
+      "storage/PITR/backup/restore/build/registry/CPU costs not in the two illustrative operation formulas"
+    ],
+    "measured": false
+  },
+  "ownerGuide": "docs/DEPLOY.md",
+  "openQuestions": [
+    "Confirm staging Firebase project exists and Blaze is active",
+    "Approve cloud runtime/App Check activation after confirmation",
+    "Confirm budget recipients and backup retention before production"
+  ]
+}

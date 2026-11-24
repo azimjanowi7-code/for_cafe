@@ -1,0 +1,6 @@
+export async function probeBackend(url:string,fetcher:typeof fetch=fetch):Promise<boolean>{try{const response=await fetcher(url,{cache:'no-store',signal:AbortSignal.timeout(2500)});if(!response.ok)return false;const data=await response.json();return data.service==='cafe-functions'&&data.emulator===true}catch{return false}}
+export function startConnectivity(options:{url:string;isOnline:()=>boolean;onChange:(online:boolean)=>void;target:Pick<Window,'addEventListener'|'removeEventListener'>;probe?:(url:string)=>Promise<boolean>;intervalMs?:number}){
+ let closed=false,generation=0;const refresh=async()=>{const current=++generation;if(!options.isOnline()){options.onChange(false);return}const online=await(options.probe||probeBackend)(options.url);if(!closed&&current===generation)options.onChange(online&&options.isOnline())};
+ const offline=()=>{generation++;options.onChange(false)},online=()=>{void refresh()};options.target.addEventListener('online',online);options.target.addEventListener('offline',offline);const timer=setInterval(online,options.intervalMs??5000);void refresh();
+ return {refresh,stop:()=>{closed=true;generation++;clearInterval(timer);options.target.removeEventListener('online',online);options.target.removeEventListener('offline',offline)}};
+}

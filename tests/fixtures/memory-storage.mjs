@@ -1,0 +1,1 @@
+export class MemoryStorage{constructor(records=[]){this.data=new Map(records)}get length(){return this.data.size}key(i){return [...this.data.keys()][i]??null}getItem(k){return this.data.get(k)??null}setItem(k,v){this.data.set(k,String(v))}removeItem(k){this.data.delete(k)}clear(){this.data.clear()}records(){return JSON.parse(JSON.stringify([...this.data]))}}

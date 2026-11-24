@@ -1,0 +1,15 @@
+{
+  "mode": "static-local-demo",
+  "backendEnabled": false,
+  "deployed": false,
+  "checks": {
+    "unitTestsPassed": 54,
+    "staticBuild": "npm run build:demo passed",
+    "backendSdkEndpointsInBuiltJavaScript": "none found",
+    "safariDesktop": ["waiter draft sent", "open Cook tab received same ticket without reload", "Cook serve completed", "seeded paid Reports rendered", "KY login showed all three account passwords"],
+    "fullResponsiveWidthSweep": "not performed"
+  },
+  "output": "dist/",
+  "guide": "docs/DEMO.md",
+  "limitations": ["same browser profile and exact origin only", "demo authentication is public and simulated", "same-record simultaneous edits can be last-write-wins", "historical backend files remain inactive"]
+}

@@ -1,0 +1,17 @@
+import QRCode from 'qrcode';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import ts from 'typescript';
+// Use the same small, SDK-free URL implementation as the in-app download tool.
+const js=ts.transpileModule(readFileSync(new URL('../src/publicMenuUrl.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const {publicMenuUrl}=await import(`data:text/javascript;base64,${Buffer.from(js).toString('base64')}`);
+const args=process.argv.slice(2),options={};for(let i=0;i<args.length;i++){const key=args[i];if(key==='--sample')options.sample=true;else if(['--origin','--cafe','--tables','--name','--out'].includes(key)){if(!args[i+1]||args[i+1].startsWith('--'))throw Error('Missing QR option value');options[key.slice(2)]=args[++i]}else throw Error('Unknown QR option')}
+const origin=options.origin||(options.sample?'https://staging.example.invalid':null),cafeId=options.cafe||(options.sample?'demo-cafe':null),name=options.name||'[Cafe Name]',out=resolve(options.out||'qr-output'),count=options.tables===undefined?0:Number(options.tables);
+if(!origin||!cafeId||!Number.isInteger(count)||count<0||count>100)throw Error('Use --origin HTTPS_ORIGIN --cafe CAFE_ID [--tables 1..100] [--name PUBLIC_NAME] [--out DIRECTORY]');
+const originURL=new URL(origin);if(!options.sample&&(originURL.hostname.endsWith('.invalid')||['localhost','127.0.0.1','[::1]'].includes(originURL.hostname)))throw Error('Guest QR sheets need a real HTTPS origin; --sample is explicitly non-live');
+const escape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const rows=[];mkdirSync(out,{recursive:true});for(let index=0;index<Math.max(count,1);index++){const table=count?index+1:undefined,url=publicMenuUrl(origin,cafeId,table),svg=await QRCode.toString(url,{type:'svg',errorCorrectionLevel:'M',margin:4,width:240}),file=table?`table-${String(table).padStart(2,'0')}.svg`:'cafe.svg';writeFileSync(resolve(out,file),svg);rows.push({table:table??null,url,file,svg})}
+const css=':root{--ink:#241b16;--border:#d7cec5;--paper:#fff;--space:8px}body{font-family:system-ui;color:var(--ink);background:var(--paper);margin:calc(var(--space)*3)}.sheet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--space)*2)}article{border:1px solid var(--border);padding:calc(var(--space)*2);text-align:center;break-inside:avoid}svg{max-width:100%;height:auto}p{overflow-wrap:anywhere;font-size:12px}@page{size:A4;margin:12mm}@media(max-width:640px){.sheet{grid-template-columns:1fr}}';
+writeFileSync(resolve(out,'qr-sheet.html'),`<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escape(name)} · QR</title><style>${css}</style><h1>${escape(name)}</h1>${options.sample?'<p>ОБРАЗЕЦ · не опубликовано / ҮЛГҮ · жарыяланган эмес</p>':''}<p>Меню · KY / RU · QR</p><div class="sheet">${rows.map(row=>`<article><h2>${row.table?`Стол / Үстөл ${row.table}`:escape(name)}</h2>${row.svg}<p>${escape(row.url)}</p></article>`).join('')}</div></html>`);
+writeFileSync(resolve(out,'qr-manifest.json'),JSON.stringify({sample:!!options.sample,cafeId,origin:originURL.origin,tableParameter:'display only; does not authorize/create an order/session',codes:rows.map(({svg,...row})=>row)},null,2)+'\n');
+console.log(`Generated ${rows.length} QR code(s) and printable HTML locally. No network request or publication performed.`);

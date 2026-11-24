@@ -1,0 +1,55 @@
+{
+  "project": "demo-for-cafe",
+  "date": "2026-11-07T07:55:56.820Z",
+  "rulesFilesIdentical": true,
+  "actors": [
+    "admin",
+    "waiter",
+    "cook",
+    "anonymous",
+    "inactive",
+    "unclaimed",
+    "forged-role"
+  ],
+  "collections": [
+    "cafe",
+    "categories",
+    "menuItems",
+    "priceHistory",
+    "staff",
+    "tables",
+    "tableSessions",
+    "orders",
+    "dailyStats-today",
+    "dailyStats-history",
+    "waiterStats-own",
+    "waiterStats-other",
+    "publicMenu",
+    "publicItems",
+    "cafeCodes",
+    "audit",
+    "operations",
+    "staffLocks",
+    "orderReceipts",
+    "orderProcessing",
+    "loginNames",
+    "system",
+    "unknown",
+    "unknown-nested",
+    "unknown-root"
+  ],
+  "operations": [
+    "get",
+    "list",
+    "create",
+    "update",
+    "delete"
+  ],
+  "permissionAssertions": 1394,
+  "crossCafeRoles": [
+    "admin",
+    "waiter",
+    "cook"
+  ],
+  "cases": "Explicit allow/deny assertions; nested matrix plus attack and workflow cases"
+}

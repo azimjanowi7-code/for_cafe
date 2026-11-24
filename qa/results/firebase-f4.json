@@ -1,0 +1,81 @@
+{
+  "step": "F4",
+  "date": "2026-11-07",
+  "project": "demo-for-cafe",
+  "productionAccess": false,
+  "deploymentPerformed": false,
+  "checks": {
+    "unit": {
+      "passed": 25,
+      "failed": 0
+    },
+    "emulatorIntegrationIncludingNestedRulesTests": {
+      "passed": 227,
+      "failed": 0
+    },
+    "rulesPermissionAssertions": 1394,
+    "rulesMatrix": {
+      "actors": 7,
+      "collectionCases": 25,
+      "operationsPerCase": 5,
+      "ruleFilesIdentical": true
+    },
+    "builds": [
+      "TypeScript Functions",
+      "TypeScript frontend",
+      "Vite default",
+      "Vite emulator"
+    ]
+  },
+  "decisions": {
+    "orderCreation": "Callable only; direct creates denied for every client role",
+    "snapshots": "Current menu names/prices copied server-side; exists + visible + not sold out required",
+    "identity": "waiterId from authenticated UID; cafe from claims",
+    "idempotency": "Stable clientOrderId with separate intent and snapshot fingerprints",
+    "cookMenuWrites": [
+      "soldOut"
+    ],
+    "cookOrderWrites": [
+      "status",
+      "servedItems",
+      "servedAt"
+    ],
+    "waiterReads": "Own tickets or tickets in a session opened by that UID",
+    "staffReads": "Own profile get only; management/listing through server APIs",
+    "deactivation": "Membership inactive before external Auth mutations",
+    "orderDeletion": "Denied; admin soft cancellation only before session closure"
+  },
+  "attacksExplicitlyDenied": [
+    "waiter price edit",
+    "cook ticket item edit",
+    "waiter other-waiter stats read",
+    "anonymous writes",
+    "existing snapshot price modification by every role",
+    "cook name/visibility/price edit with soldOut",
+    "client price/name/owner/validation forgery",
+    "cross-cafe reads/writes by all active roles",
+    "private collection-group queries",
+    "receipt/audit/processing forgery",
+    "direct session close/table hijack",
+    "malformed served flags",
+    "role escalation",
+    "post-paid cancellation"
+  ],
+  "offlineImpact": {
+    "queueRetained": true,
+    "firebaseBusinessTransportConnected": false,
+    "firstSuccessfulSubmission": "Use current server menu prices; queued prices remain estimates",
+    "retryAfterMenuChange": "Return original committed order, no repricing",
+    "exactlyOnceMeaning": "One committed order per clientOrderId; multiple transport attempts permitted",
+    "requiredF6Test": "Offline enqueue 3 → reload → reconnect to real callable → lost-ack retry/overlapping flush → exactly 3 orders, no duplicated audit/stats, stable IDs and empty acknowledged queue",
+    "testStatus": "Planned explicitly for F6, not claimed complete in F4",
+    "migration": "Persist cafe/table/session bindings; omit legacy demo owner and price payload; adapt callable acknowledgment and prevent cross-account/cafe flush"
+  },
+  "openQuestions": [],
+  "remaining": [
+    "F5 reporting/backfill and served-time aggregates",
+    "F6 queue transport/realtime/staff list integration and required real-callable offline test",
+    "F7 reCAPTCHA Enterprise or v3 final configuration"
+  ],
+  "nextStep": "STOP; wait for explicit F4 approval before F5"
+}

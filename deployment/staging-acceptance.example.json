@@ -1,0 +1,10 @@
+{
+  "projectId": "",
+  "sourceHash": "",
+  "url": "",
+  "acceptedAt": "",
+  "realPhonePassed": false,
+  "reconnectAndTwoDevicePassed": false,
+  "appCheckAndRulesPassed": false,
+  "approvedForProduction": false
+}

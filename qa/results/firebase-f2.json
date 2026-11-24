@@ -1,0 +1,55 @@
+{
+  "step": "F2",
+  "date": "2026-11-07",
+  "project": "demo-for-cafe",
+  "productionAccess": false,
+  "checks": {
+    "unit": {
+      "passed": 25,
+      "failed": 0
+    },
+    "emulatorIntegration": {
+      "passed": 16,
+      "failed": 0
+    },
+    "builds": [
+      "TypeScript frontend",
+      "Vite default",
+      "TypeScript Functions",
+      "Vite emulator"
+    ],
+    "browser": {
+      "app": "Safari",
+      "flow": "DEMO-001 → Айжан + disposable fixture password → /waiter Tables",
+      "observed": [
+        "App Check SDK callable lookup succeeded",
+        "staff name visible",
+        "only waiter, QR and logout navigation",
+        "password-save prompt dismissed"
+      ]
+    }
+  },
+  "coverage": [
+    "cafeId-only code response",
+    "missing/invalid local App Check token rejected",
+    "eleventh lookup rate-limited",
+    "direct code reads denied",
+    "all three role claims and homes",
+    "Kyrgyz name normalization",
+    "duplicate race rejected",
+    "same name in separate cafes",
+    "wrong password and disabled user localized KY/RU",
+    "one-time bootstrap rejects repeat",
+    "public password signup blocked"
+  ],
+  "limitations": [
+    "App Check uses emulator-only CustomProvider; real production attestation remains unconfigured",
+    "Business screen data remains local pending F3–F6",
+    "Full private role rules are F4",
+    "No production changes"
+  ],
+  "openQuestions": [
+    "Choose real App Check provider before later cloud deployment"
+  ],
+  "nextStep": "STOP; wait for user F2 approval before F3"
+}

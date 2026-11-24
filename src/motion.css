@@ -1,0 +1,54 @@
+:root{
+ --motion-press:100ms;
+ --motion-micro:150ms;
+ --motion-standard:200ms;
+ --motion-sheet:250ms;
+ --motion-timer:300ms;
+ --motion-highlight:2000ms;
+ --motion-ease:cubic-bezier(.2,.8,.2,1);
+}
+.app{transition:background-color var(--motion-standard) var(--motion-ease),color var(--motion-standard) var(--motion-ease)}
+button{transition:transform var(--motion-press) var(--motion-ease),background-color var(--motion-micro) var(--motion-ease),border-color var(--motion-micro) var(--motion-ease),color var(--motion-micro) var(--motion-ease),box-shadow var(--motion-micro) var(--motion-ease)}
+button:not(:disabled):active,.button.state-active{transform:scale(.98)}
+input,textarea,select{transition:border-color var(--motion-micro) var(--motion-ease),box-shadow var(--motion-micro) var(--motion-ease)}
+.count-change{display:inline-block;animation:count-change var(--motion-micro) var(--motion-ease)}
+.total-change{animation:total-fade var(--motion-micro) var(--motion-ease)}
+.ticket-presence{display:grid;grid-template-rows:1fr;min-width:0}
+.ticket-clip{min-height:0;overflow:hidden;border-radius:var(--radius-lg)}
+.ticket-presence .order-ticket{height:100%;position:relative}
+.ticket-presence.ticket-exiting{pointer-events:none;animation:ticket-collapse var(--motion-sheet) var(--motion-ease) forwards}
+.order-ticket.ticket-arrival{animation:ticket-enter var(--motion-standard) var(--motion-ease)}
+.ticket-arrival::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 0 3px var(--color-accent);background:color-mix(in srgb,var(--color-accent) 12%,transparent);animation:ticket-highlight var(--motion-highlight) var(--motion-ease) forwards}
+.order-ticket,.order-ticket .ticket-header,.timer-chip,.timer-chip svg,.timer-dot,.live-dot,.warn-dot,.late-dot{transition:color var(--motion-timer) var(--motion-ease),background-color var(--motion-timer) var(--motion-ease),border-color var(--motion-timer) var(--motion-ease),box-shadow var(--motion-timer) var(--motion-ease)}
+.modal[open].modal-entering{animation:sheet-enter var(--motion-sheet) var(--motion-ease)}
+.modal[open].modal-closing{animation:sheet-exit var(--motion-sheet) var(--motion-ease) forwards;pointer-events:none}
+.modal[open].modal-entering::backdrop{animation:backdrop-enter var(--motion-sheet) var(--motion-ease)}
+.modal[open].modal-closing::backdrop{animation:backdrop-enter var(--motion-sheet) var(--motion-ease) reverse forwards}
+.toast{animation:toast-enter var(--motion-standard) var(--motion-ease)}
+.undo-stack{position:fixed;bottom:var(--space-px-32);left:50%;transform:translateX(-50%);z-index:110;display:flex;flex-direction:column;gap:var(--space-px-8);width:max-content;max-width:calc(100vw - 32px);max-height:50dvh;overflow-y:auto}
+.undo-stack .toast{position:relative;bottom:auto;left:auto;transform:none;max-width:100%;width:100%}
+.skeleton span,.loading-placeholder{animation:none;background:var(--line,var(--color-border))}
+.loading-placeholder{display:inline-block;width:20px;height:20px;border-radius:var(--space-px-4);flex-shrink:0}
+.spin{animation:loading-spin var(--motion-standard) var(--motion-ease) infinite}
+.page-loading{max-width:720px;margin:var(--space-px-32) auto;padding:var(--space-px-16)}
+.empty-state p{color:var(--muted);font-size:var(--text-base)}
+@keyframes count-change{from{transform:translateY(-3px);opacity:.5}to{transform:translateY(0);opacity:1}}
+@keyframes total-fade{from{opacity:.55}to{opacity:1}}
+@keyframes ticket-enter{from{transform:translateY(-12px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes ticket-highlight{from{opacity:1}to{opacity:0}}
+@keyframes ticket-collapse{from{grid-template-rows:1fr;opacity:1}to{grid-template-rows:0fr;opacity:0}}
+@keyframes sheet-enter{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sheet-exit{from{transform:translateY(0);opacity:1}to{transform:translateY(16px);opacity:0}}
+@keyframes backdrop-enter{from{opacity:0}to{opacity:1}}
+@keyframes toast-enter{from{opacity:0}to{opacity:1}}
+@keyframes loading-spin{to{transform:rotate(360deg)}}
+@media(max-width:767px){.undo-stack{bottom:calc(var(--nav-height) + var(--space-px-16))}}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ button:not(:disabled):active,.button.state-active{transform:none}
+ .order-ticket.ticket-arrival{outline:none}
+}
+.admin-drawer[open].modal-entering{animation:drawer-enter var(--motion-sheet) var(--motion-ease)}
+.admin-drawer[open].modal-closing{animation:drawer-exit var(--motion-sheet) var(--motion-ease) forwards}
+@keyframes drawer-enter{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes drawer-exit{from{transform:translateX(0);opacity:1}to{transform:translateX(-100%);opacity:0}}

@@ -1,0 +1,5 @@
+import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import {VitePWA} from 'vite-plugin-pwa';
+export default defineConfig({envDir:process.env.CAFE_ENV_DIR||'.',plugins:[react(),tailwindcss(),VitePWA({registerType:'autoUpdate',manifest:{name:'Дасторкон · Demo',short_name:'Дасторкон',lang:'ru',theme_color:'#14110F',background_color:'#FAF7F4',display:'standalone',start_url:'/',icons:[{src:'/icon.svg',sizes:'any',type:'image/svg+xml',purpose:'any'}]},workbox:{globPatterns:['**/*.{js,css,html,svg,woff2}'],globIgnores:['**/review.html','**/qa/**','**/*.map'],navigateFallback:'/index.html',navigateFallbackDenylist:[/^\/__public-menu\//],runtimeCaching:[{urlPattern:({url,request})=>request.method==='GET'&&url.pathname.startsWith('/__public-menu/'),handler:'CacheFirst',options:{cacheName:'cafe-public-menu-v1',expiration:{maxEntries:20,maxAgeSeconds:604800}}},{urlPattern:({request,url})=>request.destination==='image'&&url.protocol==='https:',handler:'CacheFirst',options:{cacheName:'cafe-dish-photos-v1',expiration:{maxEntries:60,maxAgeSeconds:2592000},cacheableResponse:{statuses:[0,200]}}}]}})]});

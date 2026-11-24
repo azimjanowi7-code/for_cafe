@@ -1,0 +1,150 @@
+{
+  "step": "F5",
+  "date": "2026-11-07",
+  "project": "demo-for-cafe",
+  "productionAccess": false,
+  "deploymentPerformed": false,
+  "checks": {
+    "unit": {
+      "passed": 31,
+      "failed": 0
+    },
+    "emulatorIncludingNestedRuleTests": {
+      "passed": 237,
+      "failed": 0,
+      "f5SpecificCases": 10,
+      "priorRegressionAndRules": 227
+    },
+    "f4PermissionAssertions": 1394,
+    "builds": [
+      "TypeScript frontend",
+      "TypeScript Functions",
+      "Vite default",
+      "Vite emulator"
+    ],
+    "exactUIReaderPeriods": [
+      "day",
+      "week",
+      "month"
+    ],
+    "visualReview": {
+      "completed": false,
+      "reason": "Native computer-use pipe startup failed; browser access host unavailable"
+    }
+  },
+  "implemented": [
+    "Paid-only daily aggregates and calendar day/week/month summaries in Asia/Bishkek UTC+6",
+    "Private per-waiter sold-dishes amounts, quantities and paid-session breakdown, labelled not salary",
+    "Snapshot dish quantities and deterministic top three",
+    "Cash/card split and snapshot table labels",
+    "Canonical transactional daily writer with matching cafe/waiter sales versions",
+    "Serving/Undo/current-state trigger convergence without revenue from unpaid orders",
+    "Admin-only resumable, audited recomputeStats callable, max31days",
+    "Real Reports/MyStats/Cook today subscriptions with loading/empty/error/retry states and listener cleanup",
+    "Server-confirmed initial period reads to prevent cached subset totals",
+    "Strict scalar cash/card validation before closure",
+    "Disposable demo paid fixture:1410 KGS,5 dishes,1 session,2 served tickets"
+  ],
+  "fixedSample": {
+    "anchor": "2026-11-07T14:00:00+06:00",
+    "day": {
+      "revenue": 725,
+      "tables": 2,
+      "cash": 625,
+      "card": 100,
+      "top": [
+        [
+          "d",
+          5
+        ],
+        [
+          "b",
+          2
+        ],
+        [
+          "c",
+          2
+        ]
+      ]
+    },
+    "week": {
+      "revenue": 1075,
+      "tables": 3,
+      "cash": 625,
+      "card": 450,
+      "top": [
+        [
+          "b",
+          5
+        ],
+        [
+          "d",
+          5
+        ],
+        [
+          "c",
+          3
+        ]
+      ]
+    },
+    "month": {
+      "revenue": 1325,
+      "tables": 4,
+      "cash": 875,
+      "card": 450,
+      "top": [
+        [
+          "b",
+          6
+        ],
+        [
+          "d",
+          5
+        ],
+        [
+          "a",
+          3
+        ]
+      ]
+    }
+  },
+  "snapshotStability": "Actual menu price/name write plus recompute leaves stored paid reports unchanged",
+  "backfillTests": [
+    "Repair corrupt and missing aggregates",
+    "Remove stale waiter rows",
+    "Preserve raw orders/sessions",
+    "Reject non-admins, invalid dates/oversized ranges/tenant override",
+    "Idempotent retry ID and conflict rejection",
+    "Converge concurrent close/recompute without duplicate payment"
+  ],
+  "limits": {
+    "maxRangeDays": 31,
+    "dayCreatedOrders": 500,
+    "dayServedOrders": 500,
+    "dayPaidOrders": 500,
+    "dayPaidSessions": 100,
+    "dayWaiters": 100,
+    "dayPaidDishIDs": 1000,
+    "statisticsTimeoutSeconds": 120,
+    "statisticsConcurrency": 2,
+    "maxInstances": 2,
+    "region": "asia-south2"
+  },
+  "assumptions": [
+    "Calendar weeks begin Monday",
+    "Paid sessions contribute on closure day",
+    "Kitchen counts completion day independently of payment",
+    "Waiter table counts count each paid session with that UID sales; shared table counts are non-additive",
+    "Raw closed total mismatches fail backfill rather than rewriting financial history",
+    "High-volume deployment batching/cost validation remains later deployment work"
+  ],
+  "openQuestions": [],
+  "remaining": [
+    "F6 actual order queue transport, persistent cache and kitchen ticket subscriptions",
+    "F6 accepted first-send server-price and stable-clientOrderId offline/reload/reconnect/lost-ack integration test",
+    "F6 staff screen transport/list integration",
+    "F7 reCAPTCHA Enterprise or v3 final configuration",
+    "Visual QA when browser tooling is available"
+  ],
+  "nextStep": "STOP; wait for explicit F5 approval before F6"
+}

@@ -1,0 +1,84 @@
+{
+  "step": "F3",
+  "date": "2026-11-07",
+  "project": "demo-for-cafe",
+  "productionAccess": false,
+  "deploymentPerformed": false,
+  "checks": {
+    "unit": {
+      "passed": 25,
+      "failed": 0
+    },
+    "emulatorIntegration": {
+      "passed": 33,
+      "failed": 0,
+      "f3Specific": 17,
+      "f1F2Regression": 16
+    },
+    "builds": [
+      "TypeScript Functions",
+      "TypeScript frontend",
+      "Vite default",
+      "Vite emulator"
+    ]
+  },
+  "functions": [
+    "createStaff",
+    "resetStaffPassword",
+    "setStaffActive",
+    "publishMenuItem",
+    "submitOrder",
+    "onOrderCreate",
+    "closeTable"
+  ],
+  "limits": {
+    "region": "asia-south2",
+    "maxInstances": 2,
+    "timeoutSeconds": 30,
+    "concurrency": 10,
+    "lineCount": 100,
+    "maxQty": 99,
+    "maxTicketsPerClose": 200
+  },
+  "coverage": [
+    "anonymous/waiter/cook staff-management denial",
+    "strict input validation and role-escalation denial",
+    "staff Auth claims and normalized name uniqueness",
+    "retry ID deduplication and conflict detection",
+    "password reset and Auth deactivation/restoration",
+    "cross-cafe and admin-target protection",
+    "interrupted creation/reset recovery",
+    "public menu sanitization/sold-out/hidden/delete/restore/reordered events",
+    "concurrent order replay creates one order and one aggregate increment",
+    "invalid/missing/sold-out lines rejected or quarantined",
+    "post-creation menu changes preserve snapshots",
+    "concurrent snapshot-based table closure counted once",
+    "session ownership and client total rejection",
+    "tampered snapshot refusal",
+    "Asia/Bishkek day boundaries"
+  ],
+  "serverOnlyCollections": [
+    "audit",
+    "operations",
+    "staffLocks",
+    "orderReceipts",
+    "orderProcessing"
+  ],
+  "assumptions": [
+    "Staff mutations require a stable requestId retained across retries",
+    "Waiter owns the session openedBy UID; admin may close any same-cafe session",
+    "Revenue counts closed paid sessions only",
+    "Empty sessions may close for zero and count as a closed table",
+    "Raw Admin SDK order imports validate availability when the trigger runs; submitOrder guarantees availability at commit"
+  ],
+  "remaining": [
+    "F4 complete role security rules",
+    "F5 report/recompute/served-time integration",
+    "F6 frontend staff/order transport and realtime integration",
+    "F7 reCAPTCHA Enterprise preferred (v3 fallback), no real keys configured"
+  ],
+  "openQuestions": [
+    "F4: require submitOrder callable for all client order creation, or retain direct writes with an asynchronous validation boundary?"
+  ],
+  "nextStep": "STOP; wait for explicit approval before F4"
+}

@@ -1,0 +1,19 @@
+{
+  "localOnly": true,
+  "deployed": false,
+  "cloudRuntimeReady": false,
+  "blockers": [
+    "src/firebase/client.ts and staffAuth.ts deliberately refuse non-emulator staff Auth",
+    "functions/src/businessCore.ts deliberately refuses business execution outside loopback emulators",
+    "Real reCAPTCHA Enterprise (v3 fallback), callable/Firestore enforcement and proxy-aware lookup rate limiting require implementation and staging validation",
+    "Workspace connectivity/health still targets loopback emulators",
+    "Cloud cafe initialization and one-time admin provisioning have not been implemented or executed; emulator seeds must remain local-only",
+    "Staff screen adapter, admin settings and price-history presentation are not fully cloud-integrated",
+    "Staging phone, browser/SW/multi-tab, App Check and F8 checks have not been performed"
+  ],
+  "hostingConfigs": [
+    "firebase.staging.json",
+    "firebase.production.json"
+  ],
+  "ownerGuide": "docs/DEPLOY.md"
+}

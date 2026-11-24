@@ -1,0 +1,68 @@
+{
+  "sample": true,
+  "cafeId": "demo-cafe",
+  "origin": "https://staging.example.invalid",
+  "tableParameter": "display only; does not authorize/create an order/session",
+  "codes": [
+    {
+      "table": 1,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=1",
+      "file": "table-01.svg"
+    },
+    {
+      "table": 2,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=2",
+      "file": "table-02.svg"
+    },
+    {
+      "table": 3,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=3",
+      "file": "table-03.svg"
+    },
+    {
+      "table": 4,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=4",
+      "file": "table-04.svg"
+    },
+    {
+      "table": 5,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=5",
+      "file": "table-05.svg"
+    },
+    {
+      "table": 6,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=6",
+      "file": "table-06.svg"
+    },
+    {
+      "table": 7,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=7",
+      "file": "table-07.svg"
+    },
+    {
+      "table": 8,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=8",
+      "file": "table-08.svg"
+    },
+    {
+      "table": 9,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=9",
+      "file": "table-09.svg"
+    },
+    {
+      "table": 10,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=10",
+      "file": "table-10.svg"
+    },
+    {
+      "table": 11,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=11",
+      "file": "table-11.svg"
+    },
+    {
+      "table": 12,
+      "url": "https://staging.example.invalid/m/demo-cafe?table=12",
+      "file": "table-12.svg"
+    }
+  ]
+}
